@@ -1,1 +1,1 @@
-tests/README.md
+Testes automatizados para garantir a qualidade dos módulos.
