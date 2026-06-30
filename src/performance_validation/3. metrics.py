@@ -313,3 +313,57 @@ def calculate_accuracy(
         passed=passed,
     )
 
+def calculate_precision(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    classification_threshold: float = 0.50,
+    validation_threshold: float | None = None,
+) -> MetricResult:
+    """
+    Calculate Precision.
+
+    Precision measures the proportion of predicted positives
+    that are actually positive.
+
+    Parameters
+    ----------
+    y_true
+        Binary target values.
+
+    y_score
+        Predicted probabilities.
+
+    classification_threshold
+        Probability threshold used to classify observations.
+
+    validation_threshold
+        Optional minimum acceptable Precision.
+
+    Returns
+    -------
+    MetricResult
+    """
+
+    tn, fp, fn, tp = _get_confusion_values(
+        y_true,
+        y_score,
+        classification_threshold,
+    )
+
+    precision = 0.0
+
+    if (tp + fp) > 0:
+        precision = tp / (tp + fp)
+
+    passed = None
+
+    if validation_threshold is not None:
+        passed = precision >= validation_threshold
+
+    return MetricResult(
+        name="Precision",
+        value=float(precision),
+        threshold=validation_threshold,
+        passed=passed,
+    )
+
