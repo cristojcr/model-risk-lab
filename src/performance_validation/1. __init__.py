@@ -21,3 +21,9 @@ __all__ = [
     "PerformanceValidator",
     "PerformanceValidationReport",
 ]
+
+from .metrics import calculate_auc
+
+__all__ = [
+    "calculate_auc",
+]
