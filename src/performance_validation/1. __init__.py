@@ -27,6 +27,7 @@ from .metrics import (
     calculate_precision,
     calculate_recall,
     calculate_f1,
+    calculate_specificity,
 )
 
 __all__ = [
@@ -39,4 +40,5 @@ __all__ = [
     "calculate_precision",
     "calculate_recall",
     "calculate_f1",
+    "calculate_specificity",
 ]
