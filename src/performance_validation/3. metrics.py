@@ -591,3 +591,58 @@ def calculate_negative_predictive_value(
         passed=passed,
     )
 
+def calculate_false_positive_rate(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    classification_threshold: float = 0.50,
+    validation_threshold: float | None = None,
+) -> MetricResult:
+    """
+    Calculate False Positive Rate (FPR).
+
+    FPR measures the proportion of actual negatives
+    incorrectly classified as positives.
+
+    Parameters
+    ----------
+    y_true
+        Binary target values.
+
+    y_score
+        Predicted probabilities.
+
+    classification_threshold
+        Probability threshold used to classify observations.
+
+    validation_threshold
+        Optional maximum acceptable FPR.
+
+    Returns
+    -------
+    MetricResult
+        False Positive Rate metric.
+    """
+
+    tn, fp, fn, tp = _get_confusion_values(
+        y_true=y_true,
+        y_score=y_score,
+        threshold=classification_threshold,
+    )
+
+    fpr = 0.0
+
+    if (fp + tn) > 0:
+        fpr = fp / (fp + tn)
+
+    passed = None
+
+    if validation_threshold is not None:
+        passed = fpr <= validation_threshold
+
+    return MetricResult(
+        name="False Positive Rate",
+        value=float(fpr),
+        threshold=validation_threshold,
+        passed=passed,
+    )
+
