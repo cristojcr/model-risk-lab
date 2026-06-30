@@ -20,9 +20,11 @@ from .report import PerformanceValidationReport
 from .metrics import (
     calculate_auc,
     calculate_gini,
+    calculate_ks,
 )
 
 __all__ = [
     "calculate_auc",
     "calculate_gini",
+    "calculate_ks",
 ]
