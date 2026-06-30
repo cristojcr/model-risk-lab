@@ -367,3 +367,57 @@ def calculate_precision(
         passed=passed,
     )
 
+def calculate_recall(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    classification_threshold: float = 0.50,
+    validation_threshold: float | None = None,
+) -> MetricResult:
+    """
+    Calculate Recall (Sensitivity / True Positive Rate).
+
+    Recall measures the proportion of actual positives
+    correctly identified by the model.
+
+    Parameters
+    ----------
+    y_true
+        Binary target values.
+
+    y_score
+        Predicted probabilities.
+
+    classification_threshold
+        Probability threshold used to classify observations.
+
+    validation_threshold
+        Optional minimum acceptable Recall.
+
+    Returns
+    -------
+    MetricResult
+    """
+
+    tn, fp, fn, tp = _get_confusion_values(
+        y_true,
+        y_score,
+        classification_threshold,
+    )
+
+    recall = 0.0
+
+    if (tp + fn) > 0:
+        recall = tp / (tp + fn)
+
+    passed = None
+
+    if validation_threshold is not None:
+        passed = recall >= validation_threshold
+
+    return MetricResult(
+        name="Recall",
+        value=float(recall),
+        threshold=validation_threshold,
+        passed=passed,
+    )
+
