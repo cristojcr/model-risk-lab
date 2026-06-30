@@ -18,6 +18,7 @@ from sklearn.metrics import (
 )
 
 import numpy as np
+import math
 
 
 from common.metric_result import MetricResult
@@ -755,6 +756,70 @@ def calculate_balanced_accuracy(
     return MetricResult(
         name="Balanced Accuracy",
         value=float(balanced_accuracy),
+        threshold=validation_threshold,
+        passed=passed,
+    )
+
+def calculate_matthews_correlation_coefficient(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    classification_threshold: float = 0.50,
+    validation_threshold: float | None = None,
+) -> MetricResult:
+    """
+    Calculate Matthews Correlation Coefficient (MCC).
+
+    MCC is a balanced measure of binary classification quality,
+    considering all four values of the confusion matrix.
+
+    Parameters
+    ----------
+    y_true
+        Binary target values.
+
+    y_score
+        Predicted probabilities.
+
+    classification_threshold
+        Probability threshold used to classify observations.
+
+    validation_threshold
+        Optional minimum acceptable MCC.
+
+    Returns
+    -------
+    MetricResult
+        Matthews Correlation Coefficient.
+    """
+
+    tn, fp, fn, tp = _get_confusion_values(
+        y_true=y_true,
+        y_score=y_score,
+        threshold=classification_threshold,
+    )
+
+    numerator = (tp * tn) - (fp * fn)
+
+    denominator = math.sqrt(
+        (tp + fp)
+        * (tp + fn)
+        * (tn + fp)
+        * (tn + fn)
+    )
+
+    mcc = 0.0
+
+    if denominator > 0:
+        mcc = numerator / denominator
+
+    passed = None
+
+    if validation_threshold is not None:
+        passed = mcc >= validation_threshold
+
+    return MetricResult(
+        name="Matthews Correlation Coefficient",
+        value=float(mcc),
         threshold=validation_threshold,
         passed=passed,
     )
