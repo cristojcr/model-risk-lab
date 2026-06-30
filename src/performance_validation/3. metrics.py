@@ -264,3 +264,52 @@ def _get_confusion_values(
 
     return tn, fp, fn, tp
 
+def calculate_accuracy(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    classification_threshold: float = 0.50,
+    threshold: float | None = None,
+) -> MetricResult:
+    """
+    Calculate classification accuracy.
+
+    Parameters
+    ----------
+    y_true
+        Binary target values.
+
+    y_score
+        Predicted probabilities.
+
+    classification_threshold
+        Probability threshold used to classify observations.
+
+    threshold
+        Optional minimum acceptable Accuracy.
+
+    Returns
+    -------
+    MetricResult
+        Accuracy metric.
+    """
+
+    tn, fp, fn, tp = _get_confusion_values(
+        y_true=y_true,
+        y_score=y_score,
+        threshold=classification_threshold,
+    )
+
+    accuracy = (tp + tn) / (tp + tn + fp + fn)
+
+    passed = None
+
+    if threshold is not None:
+        passed = accuracy >= threshold
+
+    return MetricResult(
+        name="Accuracy",
+        value=float(accuracy),
+        threshold=threshold,
+        passed=passed,
+    )
+
