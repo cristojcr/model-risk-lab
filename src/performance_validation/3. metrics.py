@@ -19,6 +19,7 @@ from sklearn.metrics import (
 )
 
 import numpy as np
+import pandas as pd
 import math
 
 
@@ -938,4 +939,58 @@ def calculate_log_loss(
         threshold=validation_threshold,
         passed=passed,
     )
+def calculate_calibration_curve(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    n_bins: int = 10,
+) -> pd.DataFrame:
+    """
+    Compute calibration curve data.
+
+    Parameters
+    ----------
+    y_true
+        Binary target values.
+
+    y_score
+        Predicted probabilities.
+
+    n_bins
+        Number of probability bins.
+
+    Returns
+    -------
+    pandas.DataFrame
+        Calibration table containing:
+
+        - bin
+        - predicted_probability
+        - observed_rate
+        - observations
+    """
+
+    df = pd.DataFrame({
+        "target": y_true,
+        "score": y_score,
+    })
+
+    df["bin"] = pd.cut(
+        df["score"],
+        bins=n_bins,
+        include_lowest=True,
+    )
+
+    calibration = (
+        df
+        .groupby("bin", observed=False)
+        .agg(
+            predicted_probability=("score", "mean"),
+            observed_rate=("target", "mean"),
+            observations=("target", "count"),
+        )
+        .reset_index()
+    )
+
+    return calibration
+
 
