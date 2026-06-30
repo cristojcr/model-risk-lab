@@ -11,10 +11,14 @@ Model Risk Lab
 
 from __future__      import annotations
 from scipy.stats     import ks_2samp
-from sklearn.metrics import brier_score_loss
+from sklearn.metrics import (
+    roc_auc_score,
+    brier_score_loss,
+    confusion_matrix,
+)
 
 import numpy as np
-from sklearn.metrics import roc_auc_score
+
 
 from common.metric_result import MetricResult
 
@@ -191,4 +195,37 @@ def calculate_brier_score(
         threshold=threshold,
         passed=passed,
     )
+
+def calculate_confusion_matrix(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    threshold: float = 0.50,
+) -> np.ndarray:
+    """
+    Compute the Confusion Matrix.
+
+    Parameters
+    ----------
+    y_true
+        Binary target values.
+
+    y_score
+        Predicted probabilities.
+
+    threshold
+        Classification threshold used to convert
+        probabilities into predicted classes.
+
+    Returns
+    -------
+    numpy.ndarray
+        Confusion matrix in the following format:
+
+            [[TN FP]
+             [FN TP]]
+    """
+
+    y_pred = (y_score >= threshold).astype(int)
+
+    return confusion_matrix(y_true, y_pred)
 
