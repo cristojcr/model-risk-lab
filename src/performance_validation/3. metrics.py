@@ -10,6 +10,7 @@ Model Risk Lab
 """
 
 from __future__ import annotations
+from scipy.stats import ks_2samp
 
 import numpy as np
 from sklearn.metrics import roc_auc_score
@@ -100,3 +101,49 @@ def calculate_gini(
         threshold=threshold,
         passed=passed,
     )
+def calculate_ks(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    threshold: float | None = None,
+) -> MetricResult:
+    """
+    Calculate the Kolmogorov-Smirnov (KS) statistic.
+
+    The KS statistic measures the maximum separation between the
+    cumulative distributions of predicted probabilities for the
+    positive and negative classes.
+
+    Parameters
+    ----------
+    y_true
+        Binary target values (0 or 1).
+
+    y_score
+        Predicted probabilities.
+
+    threshold
+        Optional minimum acceptable KS.
+
+    Returns
+    -------
+    MetricResult
+        Object containing the KS statistic.
+    """
+
+    positives = y_score[y_true == 1]
+    negatives = y_score[y_true == 0]
+
+    ks_statistic, _ = ks_2samp(positives, negatives)
+
+    passed = None
+
+    if threshold is not None:
+        passed = ks_statistic >= threshold
+
+    return MetricResult(
+        name="KS",
+        value=float(ks_statistic),
+        threshold=threshold,
+        passed=passed,
+    )
+
