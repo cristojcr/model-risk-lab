@@ -481,3 +481,58 @@ def calculate_f1(
         passed=passed,
     )
 
+def calculate_specificity(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    classification_threshold: float = 0.50,
+    validation_threshold: float | None = None,
+) -> MetricResult:
+    """
+    Calculate Specificity (True Negative Rate).
+
+    Specificity measures the proportion of actual negatives
+    correctly identified by the model.
+
+    Parameters
+    ----------
+    y_true
+        Binary target values.
+
+    y_score
+        Predicted probabilities.
+
+    classification_threshold
+        Probability threshold used to classify observations.
+
+    validation_threshold
+        Optional minimum acceptable Specificity.
+
+    Returns
+    -------
+    MetricResult
+        Specificity metric.
+    """
+
+    tn, fp, fn, tp = _get_confusion_values(
+        y_true=y_true,
+        y_score=y_score,
+        threshold=classification_threshold,
+    )
+
+    specificity = 0.0
+
+    if (tn + fp) > 0:
+        specificity = tn / (tn + fp)
+
+    passed = None
+
+    if validation_threshold is not None:
+        passed = specificity >= validation_threshold
+
+    return MetricResult(
+        name="Specificity",
+        value=float(specificity),
+        threshold=validation_threshold,
+        passed=passed,
+    )
+
