@@ -15,6 +15,7 @@ from sklearn.metrics import (
     roc_auc_score,
     brier_score_loss,
     confusion_matrix,
+    log_loss,
 )
 
 import numpy as np
@@ -889,6 +890,51 @@ def calculate_cohens_kappa(
     return MetricResult(
         name="Cohen's Kappa",
         value=float(kappa),
+        threshold=validation_threshold,
+        passed=passed,
+    )
+
+def calculate_log_loss(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    validation_threshold: float | None = None,
+) -> MetricResult:
+    """
+    Calculate Log Loss (Cross Entropy Loss).
+
+    Log Loss measures the quality of predicted probabilities,
+    heavily penalizing confident incorrect predictions.
+
+    Parameters
+    ----------
+    y_true
+        Binary target values.
+
+    y_score
+        Predicted probabilities.
+
+    validation_threshold
+        Optional maximum acceptable Log Loss.
+
+    Returns
+    -------
+    MetricResult
+        Log Loss metric.
+    """
+
+    loss = log_loss(
+        y_true,
+        y_score,
+    )
+
+    passed = None
+
+    if validation_threshold is not None:
+        passed = loss <= validation_threshold
+
+    return MetricResult(
+        name="Log Loss",
+        value=float(loss),
         threshold=validation_threshold,
         passed=passed,
     )
