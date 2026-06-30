@@ -29,6 +29,7 @@ from .metrics import (
     calculate_f1,
     calculate_specificity,
     calculate_false_positive_rate,
+    calculate_false_negative_rate,
 )
 
 __all__ = [
@@ -43,4 +44,5 @@ __all__ = [
     "calculate_f1",
     "calculate_specificity",
     "calculate_false_positive_rate",
+    "calculate_false_negative_rate",
 ]
