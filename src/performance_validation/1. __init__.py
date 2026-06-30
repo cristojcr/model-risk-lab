@@ -34,6 +34,7 @@ from .metrics import (
     calculate_matthews_correlation_coefficient,
     calculate_cohens_kappa,
     calculate_log_loss,
+    calculate_calibration_curve,
 )
 
 __all__ = [
@@ -53,4 +54,5 @@ __all__ = [
     "calculate_matthews_correlation_coefficient",
     "calculate_cohens_kappa",
     "calculate_log_loss",
+    "calculate_calibration_curve",
 ]
