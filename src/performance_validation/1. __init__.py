@@ -25,6 +25,7 @@ from .metrics import (
     calculate_confusion_matrix,
     calculate_accuracy,
     calculate_precision,
+    calculate_recall,
 )
 
 __all__ = [
@@ -35,4 +36,5 @@ __all__ = [
     "calculate_confusion_matrix",
     "calculate_accuracy",
     "calculate_precision",
+    "calculate_recall",
 ]
