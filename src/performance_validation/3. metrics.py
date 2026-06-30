@@ -701,3 +701,61 @@ def calculate_false_negative_rate(
         passed=passed,
     )
 
+def calculate_balanced_accuracy(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    classification_threshold: float = 0.50,
+    validation_threshold: float | None = None,
+) -> MetricResult:
+    """
+    Calculate Balanced Accuracy.
+
+    Balanced Accuracy is the arithmetic mean of
+    Recall (Sensitivity) and Specificity.
+
+    Parameters
+    ----------
+    y_true
+        Binary target values.
+
+    y_score
+        Predicted probabilities.
+
+    classification_threshold
+        Probability threshold used to classify observations.
+
+    validation_threshold
+        Optional minimum acceptable Balanced Accuracy.
+
+    Returns
+    -------
+    MetricResult
+        Balanced Accuracy metric.
+    """
+
+    recall = calculate_recall(
+        y_true=y_true,
+        y_score=y_score,
+        classification_threshold=classification_threshold,
+    ).value
+
+    specificity = calculate_specificity(
+        y_true=y_true,
+        y_score=y_score,
+        classification_threshold=classification_threshold,
+    ).value
+
+    balanced_accuracy = (recall + specificity) / 2
+
+    passed = None
+
+    if validation_threshold is not None:
+        passed = balanced_accuracy >= validation_threshold
+
+    return MetricResult(
+        name="Balanced Accuracy",
+        value=float(balanced_accuracy),
+        threshold=validation_threshold,
+        passed=passed,
+    )
+
