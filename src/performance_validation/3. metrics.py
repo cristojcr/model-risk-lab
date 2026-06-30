@@ -229,3 +229,38 @@ def calculate_confusion_matrix(
 
     return confusion_matrix(y_true, y_pred)
 
+def _get_confusion_values(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    threshold: float = 0.50,
+) -> tuple[int, int, int, int]:
+    """
+    Extract the values of the confusion matrix.
+
+    Parameters
+    ----------
+    y_true
+        Binary target values.
+
+    y_score
+        Predicted probabilities.
+
+    threshold
+        Classification threshold.
+
+    Returns
+    -------
+    tuple
+        (tn, fp, fn, tp)
+    """
+
+    cm = calculate_confusion_matrix(
+        y_true=y_true,
+        y_score=y_score,
+        threshold=threshold,
+    )
+
+    tn, fp, fn, tp = cm.ravel()
+
+    return tn, fp, fn, tp
+
