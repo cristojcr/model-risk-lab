@@ -30,6 +30,7 @@ from .metrics import (
     calculate_specificity,
     calculate_false_positive_rate,
     calculate_false_negative_rate,
+    calculate_balanced_accuracy,
 )
 
 __all__ = [
@@ -45,4 +46,5 @@ __all__ = [
     "calculate_specificity",
     "calculate_false_positive_rate",
     "calculate_false_negative_rate",
+    "calculate_balanced_accuracy",
 ]
