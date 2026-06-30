@@ -421,3 +421,63 @@ def calculate_recall(
         passed=passed,
     )
 
+def calculate_f1(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    classification_threshold: float = 0.50,
+    validation_threshold: float | None = None,
+) -> MetricResult:
+    """
+    Calculate the F1 Score.
+
+    The F1 Score is the harmonic mean of Precision and Recall.
+
+    Parameters
+    ----------
+    y_true
+        Binary target values.
+
+    y_score
+        Predicted probabilities.
+
+    classification_threshold
+        Probability threshold used to classify observations.
+
+    validation_threshold
+        Optional minimum acceptable F1 Score.
+
+    Returns
+    -------
+    MetricResult
+        F1 Score metric.
+    """
+
+    precision = calculate_precision(
+        y_true=y_true,
+        y_score=y_score,
+        classification_threshold=classification_threshold,
+    ).value
+
+    recall = calculate_recall(
+        y_true=y_true,
+        y_score=y_score,
+        classification_threshold=classification_threshold,
+    ).value
+
+    f1 = 0.0
+
+    if (precision + recall) > 0:
+        f1 = 2 * precision * recall / (precision + recall)
+
+    passed = None
+
+    if validation_threshold is not None:
+        passed = f1 >= validation_threshold
+
+    return MetricResult(
+        name="F1 Score",
+        value=float(f1),
+        threshold=validation_threshold,
+        passed=passed,
+    )
+
