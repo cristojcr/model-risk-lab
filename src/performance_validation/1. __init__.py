@@ -31,6 +31,7 @@ from .metrics import (
     calculate_false_positive_rate,
     calculate_false_negative_rate,
     calculate_balanced_accuracy,
+    calculate_matthews_correlation_coefficient,
 )
 
 __all__ = [
@@ -47,4 +48,5 @@ __all__ = [
     "calculate_false_positive_rate",
     "calculate_false_negative_rate",
     "calculate_balanced_accuracy",
+    "calculate_matthews_correlation_coefficient",
 ]
