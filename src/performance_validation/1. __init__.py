@@ -17,13 +17,12 @@ Model Risk Lab
 from .validator import PerformanceValidator
 from .report import PerformanceValidationReport
 
-__all__ = [
-    "PerformanceValidator",
-    "PerformanceValidationReport",
-]
-
-from .metrics import calculate_auc
+from .metrics import (
+    calculate_auc,
+    calculate_gini,
+)
 
 __all__ = [
     "calculate_auc",
+    "calculate_gini",
 ]
