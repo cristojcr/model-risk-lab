@@ -33,6 +33,7 @@ from .metrics import (
     calculate_balanced_accuracy,
     calculate_matthews_correlation_coefficient,
     calculate_cohens_kappa,
+    calculate_log_loss,
 )
 
 __all__ = [
@@ -51,4 +52,5 @@ __all__ = [
     "calculate_balanced_accuracy",
     "calculate_matthews_correlation_coefficient",
     "calculate_cohens_kappa",
+    "calculate_log_loss",
 ]
