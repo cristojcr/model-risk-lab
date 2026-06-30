@@ -24,6 +24,7 @@ from .metrics import (
     calculate_brier_score,
     calculate_confusion_matrix,
     calculate_accuracy,
+    calculate_precision,
 )
 
 __all__ = [
@@ -33,4 +34,5 @@ __all__ = [
     "calculate_brier_score",
     "calculate_confusion_matrix",
     "calculate_accuracy",
+    "calculate_precision",
 ]
