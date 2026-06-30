@@ -22,6 +22,7 @@ from .metrics import (
     calculate_gini,
     calculate_ks,
     calculate_brier_score,
+    calculate_confusion_matrix,
 )
 
 __all__ = [
@@ -29,4 +30,5 @@ __all__ = [
     "calculate_gini",
     "calculate_ks",
     "calculate_brier_score",
+    "calculate_confusion_matrix",
 ]
