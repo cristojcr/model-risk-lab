@@ -536,3 +536,58 @@ def calculate_specificity(
         passed=passed,
     )
 
+def calculate_negative_predictive_value(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    classification_threshold: float = 0.50,
+    validation_threshold: float | None = None,
+) -> MetricResult:
+    """
+    Calculate Negative Predictive Value (NPV).
+
+    NPV measures the proportion of predicted negatives
+    that are actually negative.
+
+    Parameters
+    ----------
+    y_true
+        Binary target values.
+
+    y_score
+        Predicted probabilities.
+
+    classification_threshold
+        Probability threshold used to classify observations.
+
+    validation_threshold
+        Optional minimum acceptable NPV.
+
+    Returns
+    -------
+    MetricResult
+        Negative Predictive Value metric.
+    """
+
+    tn, fp, fn, tp = _get_confusion_values(
+        y_true=y_true,
+        y_score=y_score,
+        threshold=classification_threshold,
+    )
+
+    npv = 0.0
+
+    if (tn + fn) > 0:
+        npv = tn / (tn + fn)
+
+    passed = None
+
+    if validation_threshold is not None:
+        passed = npv >= validation_threshold
+
+    return MetricResult(
+        name="Negative Predictive Value",
+        value=float(npv),
+        threshold=validation_threshold,
+        passed=passed,
+    )
+
