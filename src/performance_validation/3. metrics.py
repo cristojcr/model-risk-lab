@@ -824,3 +824,72 @@ def calculate_matthews_correlation_coefficient(
         passed=passed,
     )
 
+def calculate_cohens_kappa(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    classification_threshold: float = 0.50,
+    validation_threshold: float | None = None,
+) -> MetricResult:
+    """
+    Calculate Cohen's Kappa coefficient.
+
+    Cohen's Kappa measures the agreement between
+    observed and predicted classifications while
+    correcting for agreement occurring by chance.
+
+    Parameters
+    ----------
+    y_true
+        Binary target values.
+
+    y_score
+        Predicted probabilities.
+
+    classification_threshold
+        Probability threshold used to classify observations.
+
+    validation_threshold
+        Optional minimum acceptable Kappa.
+
+    Returns
+    -------
+    MetricResult
+        Cohen's Kappa coefficient.
+    """
+
+    tn, fp, fn, tp = _get_confusion_values(
+        y_true=y_true,
+        y_score=y_score,
+        threshold=classification_threshold,
+    )
+
+    total = tp + tn + fp + fn
+
+    if total == 0:
+        kappa = 0.0
+    else:
+
+        observed = (tp + tn) / total
+
+        expected = (
+            ((tp + fp) * (tp + fn))
+            + ((fn + tn) * (fp + tn))
+        ) / (total ** 2)
+
+        if expected == 1:
+            kappa = 0.0
+        else:
+            kappa = (observed - expected) / (1 - expected)
+
+    passed = None
+
+    if validation_threshold is not None:
+        passed = kappa >= validation_threshold
+
+    return MetricResult(
+        name="Cohen's Kappa",
+        value=float(kappa),
+        threshold=validation_threshold,
+        passed=passed,
+    )
+
