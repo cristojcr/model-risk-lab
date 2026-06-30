@@ -646,3 +646,58 @@ def calculate_false_positive_rate(
         passed=passed,
     )
 
+def calculate_false_negative_rate(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    classification_threshold: float = 0.50,
+    validation_threshold: float | None = None,
+) -> MetricResult:
+    """
+    Calculate False Negative Rate (FNR).
+
+    FNR measures the proportion of actual positives
+    incorrectly classified as negatives.
+
+    Parameters
+    ----------
+    y_true
+        Binary target values.
+
+    y_score
+        Predicted probabilities.
+
+    classification_threshold
+        Probability threshold used to classify observations.
+
+    validation_threshold
+        Optional maximum acceptable FNR.
+
+    Returns
+    -------
+    MetricResult
+        False Negative Rate metric.
+    """
+
+    tn, fp, fn, tp = _get_confusion_values(
+        y_true=y_true,
+        y_score=y_score,
+        threshold=classification_threshold,
+    )
+
+    fnr = 0.0
+
+    if (fn + tp) > 0:
+        fnr = fn / (fn + tp)
+
+    passed = None
+
+    if validation_threshold is not None:
+        passed = fnr <= validation_threshold
+
+    return MetricResult(
+        name="False Negative Rate",
+        value=float(fnr),
+        threshold=validation_threshold,
+        passed=passed,
+    )
+
