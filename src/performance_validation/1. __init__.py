@@ -21,10 +21,12 @@ from .metrics import (
     calculate_auc,
     calculate_gini,
     calculate_ks,
+    calculate_brier_score,
 )
 
 __all__ = [
     "calculate_auc",
     "calculate_gini",
     "calculate_ks",
+    "calculate_brier_score",
 ]
