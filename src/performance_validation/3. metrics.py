@@ -9,8 +9,9 @@ Author
 Model Risk Lab
 """
 
-from __future__ import annotations
-from scipy.stats import ks_2samp
+from __future__      import annotations
+from scipy.stats     import ks_2samp
+from sklearn.metrics import brier_score_loss
 
 import numpy as np
 from sklearn.metrics import roc_auc_score
@@ -143,6 +144,50 @@ def calculate_ks(
     return MetricResult(
         name="KS",
         value=float(ks_statistic),
+        threshold=threshold,
+        passed=passed,
+    )
+
+def calculate_brier_score(
+    y_true: np.ndarray,
+    y_score: np.ndarray,
+    threshold: float | None = None,
+) -> MetricResult:
+    """
+    Calculate the Brier Score.
+
+    The Brier Score measures the mean squared difference
+    between predicted probabilities and observed outcomes.
+
+    Lower values indicate better calibrated predictions.
+
+    Parameters
+    ----------
+    y_true
+        Binary target values.
+
+    y_score
+        Predicted probabilities.
+
+    threshold
+        Optional maximum acceptable Brier Score.
+
+    Returns
+    -------
+    MetricResult
+        Object containing the Brier Score.
+    """
+
+    brier = brier_score_loss(y_true, y_score)
+
+    passed = None
+
+    if threshold is not None:
+        passed = brier <= threshold
+
+    return MetricResult(
+        name="Brier Score",
+        value=float(brier),
         threshold=threshold,
         passed=passed,
     )
