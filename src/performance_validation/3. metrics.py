@@ -1,3 +1,5 @@
+/This section contains only calculation, no rules:
+
 calculate_auc()
 
 calculate_gini()
